@@ -1,0 +1,3 @@
+github:hakierspejs/micropython-segclock/
+github:hakierspejs/pico-vga-driver/
+
