@@ -18,7 +18,7 @@ WLAN = network.WLAN(network.STA_IF)
 
 TIME_ACTUALIZED = 0
 
-PWM_BUZZER = PWM(Pin(6))
+PIN_BUZZER = Pin(18, Pin.OUT)
 
 WATCHDOG = WDT(timeout=6000)  # s
 
@@ -83,13 +83,13 @@ def get_local_datetime():
 
 
 def tone():
-    PWM_BUZZER.freq(1500)
-
+    global WATCHDOG
     for i in range(4):
-        PWM_BUZZER.duty_u16(32000)
-        sleep_ms(100 - 10 * i)
-        PWM_BUZZER.duty_u16(0)
-        sleep_ms(100 + 100 * i)
+        WATCHDOG.feed()
+        PIN_BUZZER.high()
+        utime.sleep_ms(100 - 10 * i)
+        PIN_BUZZER.low()
+        utime.sleep_ms(100 + 100 * i)
     return
 
 
@@ -182,6 +182,7 @@ def vga_thread(job):
 def main():
     global TIME_ACTUALIZED
 
+    tone()
     _thread.start_new_thread(vga_thread, (1,))
 
     for i in range(1000000):
